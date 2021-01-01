@@ -50,7 +50,7 @@ class _LocationDemoState extends State<LocationDemo> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              // this is where the map view is located
+              // this is where the map view is located 
 
               Flexible(
                   child: Text("Longitude: ")
