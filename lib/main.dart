@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocation/geolocation.dart';
 
 void main() {
   runApp(MyApp());
@@ -41,6 +42,33 @@ class LocationDemo extends StatefulWidget {
 }
 
 class _LocationDemoState extends State<LocationDemo> {
+  // instantiate the geolocator class
+  // final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+
+  // variables for the position and address recorded
+  String _currentAddress;
+  String _latitude, _longitude;
+
+  // function for getting the current Position
+  _getCurrentLocation() async {
+    Geolocation.enableLocationServices().then((result) {
+      // Request location
+      // print(result)
+    }).catchError((e){
+      // Location services enabled cancelled
+    });
+
+    Geolocation.currentLocation(accuracy: LocationAccuracy.best)
+        .listen((result){
+      if (result.isSuccessful) {
+        setState(() {
+          _latitude = result.location.latitude.toString();
+          _longitude = result.location.longitude.toString();
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,17 +78,18 @@ class _LocationDemoState extends State<LocationDemo> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              // this is where the map view is located 
-
+              // this is where the map view is located
               Flexible(
-                  child: Text("Longitude: ")
-              ),
+                  child: Text(_latitude == null
+                      ? "Latitude: can't determine!"
+                      : "Latitude: " + _latitude)),
               SizedBox(
-                 height: 2,
+                height: 2,
               ),
               Flexible(
-                  child: Text("Latitude: ")
-              )
+                  child: Text(_longitude == null
+                      ? "Longitude: can't determine!"
+                      : "Longitude: " + _longitude))
             ],
           ),
         ),
@@ -68,7 +97,6 @@ class _LocationDemoState extends State<LocationDemo> {
     );
   }
 }
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
